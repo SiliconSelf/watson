@@ -40,8 +40,7 @@ async fn test_username(
         Some(true) => {
             println!("{site_name}: {name}");
         }
-        Some(false) => {}
-        None => {}
+        Some(false) | None => {}
     }
 }
 

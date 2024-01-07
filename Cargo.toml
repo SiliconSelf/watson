@@ -5,6 +5,11 @@ version = "0.1.0"
 edition = "2021"
 authors = [ "Wren Morozova <siliconself@proton.me> "]
 
+[profile.release]
+lto = true
+strip = true
+opt-level = 3
+codegen-units = 1
 
 [workspace.lints.rust]
 missing_abi = "warn"

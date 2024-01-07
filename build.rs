@@ -90,32 +90,9 @@ fn main() {
         );
     let mut file_handle =
         std::fs::File::create("src/gen.rs").expect("Failed to open gen.rs");
-    let mut tests_file_handle = std::fs::File::create("src/gen_test.rs")
-        .expect("Failed to create tests file");
-
-    write!(tests_file_handle, "use reqwest::Client;\nuse crate::gen::SITES;\n");
 
     let mut sites = phf_codegen::Map::new();
     for (site, data) in data {
-        // Create tests
-        if matches!(data.error_type, ErrorType::StatusCode) {
-            if let Some(claimed) = data.username_claimed {
-                write!(
-                    tests_file_handle,
-                    "{}",
-                    create_claimed_username_test(&site, &claimed)
-                )
-                .expect("Failed to make test");
-            };
-            if let Some(unclaimed) = data.username_unclaimed {
-                write!(
-                    tests_file_handle,
-                    "{}",
-                    create_unclaimed_username_test(&site, &unclaimed)
-                )
-                .expect("Failed to make test");
-            }
-        }
         match data.error_type {
             ErrorType::StatusCode => {
                 sites.entry(

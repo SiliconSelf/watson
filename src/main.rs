@@ -7,8 +7,6 @@ use clap::Parser;
 /// Generated site data
 #[allow(clippy::all)]
 mod gen;
-#[cfg(test)]
-mod gen_test;
 /// Where the various kinds of site are represented as structures
 mod sites;
 
@@ -21,17 +19,6 @@ use tokio::sync::mpsc::UnboundedSender;
 
 /// The shared client for Reqwest that all sites will use
 pub(crate) static REQWEST_CLIENT: OnceCell<Client> = OnceCell::new();
-
-pub(crate) fn create_client() -> Client {
-    let mut headers = header::HeaderMap::new();
-    headers.insert("Accept-Language", header::HeaderValue::from_static("en-US,en;q=0.5"));
-    headers.insert("Accept", header::HeaderValue::from_static("text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8"));
-    Client::builder()
-        .user_agent("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0")
-        .default_headers(headers)
-        .build()
-        .expect("Can't make client")
-}
 
 /// A struct representing the possible CLI configurations of the program
 #[derive(Parser, Debug)]
@@ -59,7 +46,7 @@ async fn test_username(
 async fn main() {
     let cli = Args::parse();
     REQWEST_CLIENT
-        .set(create_client())
+        .set(Client::new())
         .expect("Cell cannot already be initialized");
     let (tx, mut rx) = tokio::sync::mpsc::unbounded_channel();
     for name in cli.names {

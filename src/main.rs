@@ -21,7 +21,7 @@ pub(crate) static REQWEST_CLIENT: OnceCell<Client> = OnceCell::new();
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
 pub(crate) struct Args {
-    /// If all sites should be displayed or only matches
+    // If all sites should be displayed or only matches
     // #[arg(short, long)]
     // show_all: bool,
     /// Usernames to search for

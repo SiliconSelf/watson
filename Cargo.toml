@@ -3,6 +3,7 @@ name = "watson"
 description = "Search for accounts across social media platforms by username"
 version = "0.1.0"
 edition = "2021"
+authors = [ "Wren Morozova <siliconself@proton.me> "]
 
 
 [workspace.lints.rust]

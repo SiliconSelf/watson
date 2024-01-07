@@ -40,12 +40,10 @@ async fn test_username(
     sender: UnboundedSender<Option<String>>
 ) {
     sender.send(match site_data.test(&name).await {
-        Some(true) => {
-            Some(format!("{site_name}: {name}"))
+        Some(url) => {
+            Some(format!("{site_name}: {url}"))
         }
-        Some(false) | None => {
-            None
-        }
+        None => None
     });
 }
 

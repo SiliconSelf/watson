@@ -22,12 +22,12 @@ pub(crate) enum SiteType {
 /// The methods a site must implement
 pub(crate) trait Site {
     /// Test if a username exists at the given site
-    async fn test(&self, username: &str) -> Option<bool>;
+    async fn test(&self, username: &str) -> Option<String>;
 }
 
 impl SiteType {
     /// Test if a username exists on the given platform represented by &self<T>
-    pub(crate) async fn test(&self, username: &str) -> Option<bool> {
+    pub(crate) async fn test(&self, username: &str) -> Option<String> {
         match self {
             SiteType::StatusCode(site) => site.test(username).await,
             SiteType::Message(site) => site.test(username).await,

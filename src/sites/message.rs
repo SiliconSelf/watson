@@ -11,18 +11,22 @@ pub(crate) struct MessageSite {
 }
 
 impl Site for MessageSite {
-    async fn test(&self, username: &str) -> Option<bool> {
+    async fn test(&self, username: &str) -> Option<String> {
         let request_url = self.url.replace("{}", username);
         let Ok(response) = REQWEST_CLIENT
             .get()
             .expect("Client not defined for {self.url}")
-            .get(request_url)
+            .get(&request_url)
             .send()
             .await
         else {
             return None;
         };
         let text = response.text().await.expect("");
-        Some(!text.contains(self.error_message))
+        if text.contains(self.error_message) {
+            None
+        } else {
+            Some(request_url)
+        }
     }
 }

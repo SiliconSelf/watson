@@ -8,17 +8,21 @@ pub(crate) struct StatusSite {
 }
 
 impl Site for StatusSite {
-    async fn test(&self, username: &str) -> Option<bool> {
+    async fn test(&self, username: &str) -> Option<String> {
         let request_url = self.url.replace("{}", username);
         let Ok(response) = REQWEST_CLIENT
             .get()
             .expect("Client not defined for {self.url}")
-            .head(request_url)
+            .head(&request_url)
             .send()
             .await
         else {
             return None;
         };
-        Some(response.status().is_success())
+        if response.status().is_success() {
+            Some(request_url)
+        } else {
+            None
+        }
     }
 }

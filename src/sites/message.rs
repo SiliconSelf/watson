@@ -1,3 +1,5 @@
+use std::time::Duration;
+
 use super::Site;
 use crate::REQWEST_CLIENT;
 
@@ -15,12 +17,15 @@ impl Site for MessageSite {
         let request_url = self.url.replace("{}", username);
         let Ok(response) = REQWEST_CLIENT
             .get()
-            .expect("Client not defined for {self.url}")
+            .unwrap_or_else(|| {
+                panic!("Client not defined for {}", &request_url)
+            })
             .get(&request_url)
+            .timeout(Duration::from_secs(1))
             .send()
             .await
         else {
-            return None;
+            panic!("Request failed!");
         };
         let text = response.text().await.expect("");
         if text.contains(self.error_message) {

@@ -1,3 +1,5 @@
+use std::time::Duration;
+
 use super::Site;
 use crate::REQWEST_CLIENT;
 
@@ -10,19 +12,16 @@ pub(crate) struct StatusSite {
 impl Site for StatusSite {
     async fn test(&self, username: &str) -> Option<String> {
         let request_url = self.url.replace("{}", username);
-        let Ok(response) = REQWEST_CLIENT
+        let response = REQWEST_CLIENT
             .get()
-            .expect("Client not defined for {self.url}")
+            .unwrap_or_else(|| {
+                panic!("Client not defined for {}", &request_url)
+            })
             .head(&request_url)
+            .timeout(Duration::from_secs(60))
             .send()
             .await
-        else {
-            return None;
-        };
-        if response.status().is_success() {
-            Some(request_url)
-        } else {
-            None
-        }
+            .expect("Request failed!");
+        response.status().is_success().then_some(request_url)
     }
 }

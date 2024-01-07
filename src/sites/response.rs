@@ -4,6 +4,6 @@ pub(crate) struct ResponseSite {}
 
 impl Site for ResponseSite {
     async fn test(&self, username: &str) -> Option<String> {
-        todo!();
+        Some(String::new())
     }
 }

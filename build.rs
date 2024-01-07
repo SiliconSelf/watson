@@ -3,6 +3,7 @@
 use std::{collections::HashMap, io::Write};
 
 use serde::{Deserialize, Serialize};
+use slugify::slugify;
 
 /// The kind of error a site will return if a user doesn't exist
 #[derive(Serialize, Deserialize)]
@@ -48,6 +49,37 @@ struct Site {
     error_url: Option<String>,
 }
 
+fn create_claimed_username_test(
+    service_name: &str,
+    username_claimed: &str,
+) -> String {
+    format!(
+        "#[tokio::test]\nasync fn test_{}_claimed() {{ \
+         crate::REQWEST_CLIENT.get_or_init(crate::create_client); \
+         assert!(SITES.get(\"{}\").expect(\"Entry not \
+         found\").test(\"{}\").await.is_some()); }}\n",
+        slugify!(&service_name).replace('-', "_"),
+        service_name,
+        username_claimed
+    )
+}
+
+fn create_unclaimed_username_test(
+    service_name: &str,
+    username_claimed: &str,
+) -> String {
+    format!(
+        "#[tokio::test]\n
+            async fn test_{}_unclaimed() {{
+                crate::REQWEST_CLIENT.get_or_init(crate::create_client);
+                assert!(SITES.get(\"{}\").expect(\"Entry not \
+         found\").test(\"{}\").await.is_none()); }}\n",
+        slugify!(&service_name).replace('-', "_"),
+        service_name,
+        username_claimed
+    )
+}
+
 fn main() {
     let sites_file_string = std::fs::read_to_string("sites.json")
         .expect("Failed to read sites.json");
@@ -58,9 +90,32 @@ fn main() {
         );
     let mut file_handle =
         std::fs::File::create("src/gen.rs").expect("Failed to open gen.rs");
+    let mut tests_file_handle = std::fs::File::create("src/gen_test.rs")
+        .expect("Failed to create tests file");
+
+    write!(tests_file_handle, "use reqwest::Client;\nuse crate::gen::SITES;\n");
 
     let mut sites = phf_codegen::Map::new();
     for (site, data) in data {
+        // Create tests
+        if matches!(data.error_type, ErrorType::StatusCode) {
+            if let Some(claimed) = data.username_claimed {
+                write!(
+                    tests_file_handle,
+                    "{}",
+                    create_claimed_username_test(&site, &claimed)
+                )
+                .expect("Failed to make test");
+            };
+            if let Some(unclaimed) = data.username_unclaimed {
+                write!(
+                    tests_file_handle,
+                    "{}",
+                    create_unclaimed_username_test(&site, &unclaimed)
+                )
+                .expect("Failed to make test");
+            }
+        }
         match data.error_type {
             ErrorType::StatusCode => {
                 sites.entry(

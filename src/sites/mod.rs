@@ -29,10 +29,10 @@ impl SiteType {
     /// Test if a username exists on the given platform represented by &self<T>
     pub(crate) async fn test(&self, username: &str) -> Option<bool> {
         match self {
-            SiteType::StatusCode(site) => { site.test(username).await },
-            _ => { None }
-            // SiteType::Message(site) => { site.test(username) },
-            // SiteType::ResponseUrl(site) => { site.test(username) },
+            SiteType::StatusCode(site) => site.test(username).await,
+            _ => None, /* SiteType::Message(site) => { site.test(username) },
+                        * SiteType::ResponseUrl(site) => {
+                        * site.test(username) }, */
         }
     }
 }

@@ -51,25 +51,34 @@ struct Site {
 fn main() {
     let sites_file_string = std::fs::read_to_string("sites.json")
         .expect("Failed to read sites.json");
-    let data: HashMap<String, Site> =
-    serde_json::from_str(&sites_file_string)     .expect("Failed to
-    deserialize sites.json"); let mut file_handle =
-    std::fs::File::create("src/gen.rs").expect("Failed to open gen.rs");
+    let data: HashMap<String, Site> = serde_json::from_str(&sites_file_string)
+        .expect(
+            "Failed to
+    deserialize sites.json",
+        );
+    let mut file_handle =
+        std::fs::File::create("src/gen.rs").expect("Failed to open gen.rs");
 
     let mut sites = phf_codegen::Map::new();
     for (site, data) in data {
         match data.error_type {
             ErrorType::StatusCode => {
-                sites.entry(site, &format!("SiteType::StatusCode(StatusSite {{
+                sites.entry(
+                    site,
+                    &format!(
+                        "SiteType::StatusCode(StatusSite {{
                     url: \"{}\"
-                }})", data.url));
-            },
+                }})",
+                        data.url
+                    ),
+                );
+            }
             // ErrorType::Message => {
             //     sites.entry(site, &format!("SiteType::Message(MessageSite {{
             //         url: \"{}\"
             //     }})", data.url));
             // }
-            _ => {},
+            _ => {}
             // ErrorType::ResponseUrl => {},
         }
     }
@@ -77,6 +86,9 @@ fn main() {
     writeln!(file_handle, "use crate::sites::SiteType;");
     writeln!(file_handle, "use crate::sites::status::StatusSite;");
     writeln!(file_handle, "use crate::sites::message::MessageSite;");
-    write!(file_handle, "pub(crate) static SITES: phf::Map<&'static str, SiteType> = {};",
-    sites.build());
+    write!(
+        file_handle,
+        "pub(crate) static SITES: phf::Map<&'static str, SiteType> = {};",
+        sites.build()
+    );
 }

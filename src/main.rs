@@ -4,10 +4,11 @@ use std::sync::Arc;
 
 use clap::Parser;
 
+/// Generated site data
+#[allow(clippy::all)]
+mod gen;
 /// Where the various kinds of site are represented as structures
 mod sites;
-/// Generated site data
-#[allow(clippy::all)] mod gen;
 
 use gen::SITES;
 use once_cell::sync::OnceCell;
@@ -30,24 +31,34 @@ pub(crate) struct Args {
 
 /// Asynchronously test for the existence of an account
 #[allow(clippy::rc_buffer)]
-async fn test_username(name: Arc<String>, site_name: &str, site_data: &SiteType) {
+async fn test_username(
+    name: Arc<String>,
+    site_name: &str,
+    site_data: &SiteType,
+) {
     match site_data.test(&name).await {
-        Some(true) => { println!("{site_name}: {name}"); },
-        Some(false) => { }
-        None => { println!("Error while checking {site_name}") },
+        Some(true) => {
+            println!("{site_name}: {name}");
+        }
+        Some(false) => {}
+        None => {}
     }
 }
 
 #[tokio::main]
 async fn main() {
     let cli = Args::parse();
-    REQWEST_CLIENT.set(reqwest::Client::new()).expect("Cell cannot already be initialized");
+    REQWEST_CLIENT
+        .set(reqwest::Client::new())
+        .expect("Cell cannot already be initialized");
     let mut tasks = Vec::new();
     for name in cli.names {
         let name_arc = Arc::new(name);
         for (site_name, site_data) in SITES.entries() {
             let new_arc = name_arc.clone();
-            let handle = tokio::task::spawn(test_username(new_arc, site_name, site_data));
+            let handle = tokio::task::spawn(test_username(
+                new_arc, site_name, site_data,
+            ));
             tasks.push(handle);
         }
     }

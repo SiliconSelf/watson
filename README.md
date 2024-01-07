@@ -28,7 +28,7 @@ Options:
 
 ## Why Not Use Sherlock?
 
-I made this program because I got sick of how slow Sherlock is when I was searching for usernames that weren't already squatted on a site I use.
+I made this program because I got sick of how slow Sherlock is when I was searching for usernames that weren't already squatted on a site I use. Realistically, you should probably use Sherlock instead for more up-to-date data.
 
 ## Major Issues
 

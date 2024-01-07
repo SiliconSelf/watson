@@ -1,5 +1,8 @@
+/// Message response sites
 pub(crate) mod message;
+/// Response sites
 pub(crate) mod response;
+/// Status error sites
 pub(crate) mod status;
 
 use message::MessageSite;
@@ -23,6 +26,7 @@ pub(crate) trait Site {
 }
 
 impl SiteType {
+    /// Test if a username exists on the given platform represented by &self<T>
     pub(crate) async fn test(&self, username: &str) -> Option<bool> {
         match self {
             SiteType::StatusCode(site) => { site.test(username).await },

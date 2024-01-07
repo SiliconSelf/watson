@@ -52,6 +52,6 @@ async fn main() {
         }
     }
     for handle in tasks {
-        handle.await.unwrap();
+        handle.await.expect("Request failed");
     }
 }

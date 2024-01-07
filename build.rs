@@ -73,10 +73,10 @@ fn main() {
             // ErrorType::ResponseUrl => {},
         }
     }
-    write!(file_handle, "#![allow(clippy::all)]\n");
-    write!(file_handle, "use crate::sites::SiteType;\n");
-    write!(file_handle, "use crate::sites::status::StatusSite;\n");
-    write!(file_handle, "use crate::sites::message::MessageSite;\n");
+    writeln!(file_handle, "#![allow(clippy::all)]");
+    writeln!(file_handle, "use crate::sites::SiteType;");
+    writeln!(file_handle, "use crate::sites::status::StatusSite;");
+    writeln!(file_handle, "use crate::sites::message::MessageSite;");
     write!(file_handle, "pub(crate) static SITES: phf::Map<&'static str, SiteType> = {};",
     sites.build());
 }

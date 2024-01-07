@@ -1,9 +1,10 @@
 use super::Site;
 
-pub(crate) struct ResponseSite {}
+/// A representation of a site that returns a redirect as an error.
+pub(crate) struct ResponseSite;
 
 impl Site for ResponseSite {
-    async fn test(&self, username: &str) -> Option<String> {
+    async fn test(&self, _username: &str) -> Option<String> {
         Some(String::new())
     }
 }

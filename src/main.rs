@@ -11,9 +11,8 @@ mod gen;
 mod sites;
 
 use gen::SITES;
-use indicatif::ProgressBar;
 use once_cell::sync::OnceCell;
-use reqwest::{Client, header};
+use reqwest::Client;
 use sites::SiteType;
 use tokio::sync::mpsc::UnboundedSender;
 
@@ -61,15 +60,14 @@ async fn main() {
             ));
         }
     }
-    let bar = ProgressBar::new(SITES.entries().len() as u64);
+    
     loop {
         match rx.try_recv() {
             #[allow(clippy::unwrap_used)]
             Ok(value) if value.is_some() => {
-                bar.println(&value.unwrap());
-                bar.inc(1);
+                println!("{}", &value.unwrap());
             }
-            Ok(value) if value.is_none() => bar.inc(1),
+            Ok(value) if value.is_none() => { },
             Ok(_) => {}
             Err(tokio::sync::mpsc::error::TryRecvError::Empty) => {
                 std::thread::sleep(Duration::from_millis(250));

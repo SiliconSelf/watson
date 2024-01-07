@@ -30,9 +30,8 @@ impl SiteType {
     pub(crate) async fn test(&self, username: &str) -> Option<bool> {
         match self {
             SiteType::StatusCode(site) => site.test(username).await,
-            _ => None, /* SiteType::Message(site) => { site.test(username) },
-                        * SiteType::ResponseUrl(site) => {
-                        * site.test(username) }, */
+            SiteType::Message(site) => site.test(username).await,
+            SiteType::ResponseUrl(site) => site.test(username).await
         }
     }
 }

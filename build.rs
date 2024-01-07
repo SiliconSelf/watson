@@ -73,11 +73,12 @@ fn main() {
                     ),
                 );
             }
-            // ErrorType::Message => {
-            //     sites.entry(site, &format!("SiteType::Message(MessageSite {{
-            //         url: \"{}\"
-            //     }})", data.url));
-            // }
+            ErrorType::Message => {
+                sites.entry(site, &format!("SiteType::Message(MessageSite {{
+                    url: \"{}\",
+                    error_message: \"{}\"
+                }})", data.url, data.error_msg.expect("No error message defined for site using message error type").replace('"', "\\\"")));
+            }
             _ => {}
             // ErrorType::ResponseUrl => {},
         }

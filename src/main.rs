@@ -40,7 +40,9 @@ async fn test_username(
         Some(true) => {
             println!("{site_name}: {name}");
         }
-        Some(false) | None => { println!("Not detected at {site_name}"); }
+        Some(false) | None => {
+            println!("Not detected at {site_name}");
+        }
     }
 }
 

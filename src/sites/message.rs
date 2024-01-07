@@ -1,6 +1,5 @@
-use crate::REQWEST_CLIENT;
-
 use super::Site;
+use crate::REQWEST_CLIENT;
 
 /// A site that will indicate the lack of an account with a message in the
 /// response body
@@ -8,7 +7,7 @@ pub(crate) struct MessageSite {
     /// The site's url
     pub(crate) url: &'static str,
     /// The error message to look for in the response body
-    pub(crate) error_message: &'static str
+    pub(crate) error_message: &'static str,
 }
 
 impl Site for MessageSite {

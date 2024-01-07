@@ -31,7 +31,7 @@ impl SiteType {
         match self {
             SiteType::StatusCode(site) => site.test(username).await,
             SiteType::Message(site) => site.test(username).await,
-            SiteType::ResponseUrl(site) => site.test(username).await
+            SiteType::ResponseUrl(site) => site.test(username).await,
         }
     }
 }

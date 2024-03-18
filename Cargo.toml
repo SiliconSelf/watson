@@ -60,7 +60,7 @@ clap = { version = "4.5.2", features = ["derive"] }
 once_cell = "1.19.0"
 phf = "0.11.2"
 regex = "1.10.3"
-reqwest = { version = "0.11.25", features = ["gzip"] }
+reqwest = { version = "0.11.26", features = ["gzip"] }
 tokio = { version = "1.36.0", features = ["full"] }
 
 [build-dependencies]

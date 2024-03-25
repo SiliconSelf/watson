@@ -59,7 +59,7 @@ workspace = true
 clap = { version = "4.5.4", features = ["derive"] }
 once_cell = "1.19.0"
 phf = "0.11.2"
-regex = "1.10.3"
+regex = "1.10.4"
 reqwest = { version = "0.12.2", features = ["gzip"] }
 tokio = { version = "1.36.0", features = ["full"] }
 
